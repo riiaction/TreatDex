@@ -35,7 +35,7 @@ export interface Subtask {
   completed: boolean;
 }
 
-export const INITIAL_CAFE_REWARDS: Omit<reward, "id"="" |="" "assignedtaskid"="">[] = [
+export const INITIAL_CAFE_REWARDS: Omit<Reward, "id" | "assignedTaskId">[] = [
   {
     type: "cafe",
     name: "Cupping Room Coffee Roasters",
