@@ -36,7 +36,7 @@ export function useAppStore() {
 
   const [masterKeyMode, setMasterKeyMode] = useState(false);
   const [customMasterKey, setCustomMasterKey] = useState(() => {
-    return localStorage.getItem("cafedex_masterkey") || "cafedex";
+    return localStorage.getItem("cafedex_masterkey") || "treatdex";
   });
 
   // Auto-repair orphaned tasks and rewards
