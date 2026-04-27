@@ -115,8 +115,9 @@ export function TaskInputModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md p-6 shadow-xl my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
+      {/* Changed rounded-t-3xl sm:rounded-3xl to just rounded-3xl for a complete look */}
+      <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-xl my-auto relative">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-900">
             {initialTask ? "Edit Task" : "New Task"}
