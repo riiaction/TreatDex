@@ -9,12 +9,12 @@ function getAvailablePokemonIds(usedIds: number[]): number[] {
 }
 
 export function useAppStore() {
-  const [tasks, setTasks] = useState<task[]>(() => {
+  const [tasks, setTasks] = useState<Task[]>(() => {
     const saved = localStorage.getItem("cafedex_tasks");
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [rewards, setRewards] = useState<reward[]>(() => {
+  const [rewards, setRewards] = useState<Reward[]>(() => {
     const saved = localStorage.getItem("cafedex_rewards");
     if (saved) {
       const parsed = JSON.parse(saved);
@@ -151,7 +151,7 @@ export function useAppStore() {
     title: string,
     deadline: string | null,
     subtaskTitles: string[],
-    tags: any[] = [],
+    tags: string[] = [],
   ) => {
     setTasks((prev) =>
       prev.map((t) => {
@@ -217,7 +217,7 @@ export function useAppStore() {
     );
   };
 
-  const updateReward = (rewardId: string, updates: Partial<reward>) => {
+  const updateReward = (rewardId: string, updates: Partial<Reward>) => {
     setRewards((prev) =>
       prev.map((r) => (r.id === rewardId ? { ...r, ...updates } : r)),
     );
