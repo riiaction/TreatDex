@@ -160,11 +160,11 @@ export function TaskList({
   });
 
   return (
-    // FIX: Main container is flex-col so scrollable content + fixed bar are separate
-    <div className="flex-1 flex flex-col overflow-hidden">
+    // FIX: Changed to flex-col so we can have scrollable content + fixed bottom bar
+    <div className="flex-1 relative flex flex-col overflow-hidden">
 
-      {/* SCROLLABLE CONTENT AREA */}
-      <div className="flex-1 overflow-y-auto pb-24">
+      {/* Scrollable task list area — pb-32 gives space so last task isn't hidden behind the bar */}
+      <div className="flex-1 overflow-y-auto pb-32">
         <div className="px-6 pt-4 pb-6">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <button 
@@ -312,9 +312,8 @@ export function TaskList({
         </div>
       </div>
 
-      {/* FIX: CAUGHT TODAY BAR IS NOW OUTSIDE THE SCROLLABLE AREA */}
-      {/* This div is a sibling of the scrollable area, not inside it, so it never scrolls */}
-      <div className="shrink-0 px-6 py-4 bg-white/95 border-t border-gray-100 flex flex-col items-center pointer-events-none z-20">
+      {/* FIX: Caught Today bar is now OUTSIDE the scrollable area so it never scrolls away */}
+      <div className="px-6 pb-6 pt-2 bg-transparent pointer-events-none z-10 flex flex-col items-center">
         <AnimatePresence>
           {toastMessage && (
             <motion.div 
@@ -328,8 +327,7 @@ export function TaskList({
             </motion.div>
           )}
         </AnimatePresence>
-        
-        <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-100 pointer-events-auto relative pr-[4.5rem]">
+        <div className="w-full bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-100 pointer-events-auto relative pr-[4.5rem]">
           <div className="flex justify-between items-center mb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
               Caught Today
@@ -345,7 +343,6 @@ export function TaskList({
               )}
             </div>
           </div>
-          
           <button onClick={onAddNewClick} className="absolute top-1/2 -translate-y-1/2 right-4 w-9 h-9 bg-[#ed444a] hover:bg-red-600 active:bg-red-700 text-white rounded-full shadow-lg shadow-red-500/30 flex items-center justify-center transition-transform hover:scale-105 active:scale-95 z-20 pointer-events-auto">
             <Plus size={20} strokeWidth={2.5} />
           </button>
