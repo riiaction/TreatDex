@@ -116,7 +116,6 @@ export function TaskInputModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
-      {/* Changed rounded-t-3xl sm:rounded-3xl to just rounded-3xl for a complete look */}
       <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-xl my-auto relative">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-900">
@@ -189,10 +188,12 @@ export function TaskInputModal({
               {subtasks.map((st, i) => (
                 <div key={i} className="flex items-center space-x-2">
                   <div className="w-5 h-5 rounded-full border-2 border-gray-200"/>
+                  {/* FIX 3: font-size set to 16px to prevent iOS auto-zoom on subtask input */}
                   <input 
                     type="text" 
                     placeholder={i === 0 ? "Break it down" : ""} 
-                    className="w-full text-sm placeholder-gray-400 border-none focus:ring-0 p-2 bg-gray-50 rounded-lg" 
+                    className="w-full placeholder-gray-400 border-none focus:ring-0 p-2 bg-gray-50 rounded-lg" 
+                    style={{ fontSize: '16px' }}
                     value={st} 
                     onChange={(e) => handleSubtaskChange(i, e.target.value)}
                   />
@@ -232,10 +233,12 @@ export function TaskInputModal({
                       </button>
                     </span>
                   ))}
+                  {/* FIX 3: font-size set to 16px to prevent iOS auto-zoom on tag input */}
                   <input 
                     type="text" 
                     placeholder={tags.length === 0 ? "Add tag" : ""} 
-                    className="bg-transparent border-none focus:ring-0 text-sm font-medium w-[150px] flex-1 min-w-[100px] p-0" 
+                    className="bg-transparent border-none focus:ring-0 font-medium w-[150px] flex-1 min-w-[100px] p-0"
+                    style={{ fontSize: '16px' }}
                     value={tagInput} 
                     onChange={(e) => setTagInput(e.target.value)}
                     onFocus={() => {
