@@ -223,7 +223,7 @@ export function useAppStore() {
     );
   };
 
-  const addReward = (reward: Omit<reward, "id"="">) => {
+  const addReward = (reward: Omit<Reward, "id">) => {
     const newId = uuidv4();
     let assignedTaskId: string | undefined = undefined;
 
