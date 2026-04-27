@@ -6,7 +6,6 @@ import {
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
-  isSameMonth,
   isSameDay,
   getDay,
   isToday,
@@ -34,8 +33,6 @@ export function TaskCalendar({
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
-  const startDate = monthStart;
-  const endDate = monthEnd;
 
   const dateFormat = "MMMM yyyy";
 
@@ -50,43 +47,43 @@ export function TaskCalendar({
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
   return (
-    <div classname="bg-white p-3 rounded-2xl shadow-xl border border-gray-100 max-w-[280px] w-full mx-auto font-sans">
-      <div classname="flex justify-between items-center mb-4 px-1">
-        <div classname="flex gap-1 text-gray-500">
-          <button type="button" onclick="{prevYear}" classname="p-1 hover:bg-gray-100 rounded-full transition-colors">
-            <chevronsleft size="{16}"/>
+    <div className="bg-white p-3 rounded-2xl shadow-xl border border-gray-100 max-w-[280px] w-full mx-auto font-sans">
+      <div className="flex justify-between items-center mb-4 px-1">
+        <div className="flex gap-1 text-gray-500">
+          <button type="button" onClick={prevYear} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+            <ChevronsLeft size={16}/>
           </button>
-          <button type="button" onclick="{prevMonth}" classname="p-1 hover:bg-gray-100 rounded-full transition-colors">
-            <chevronleft size="{16}"/>
+          <button type="button" onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+            <ChevronLeft size={16}/>
           </button>
         </div>
-        <div classname="font-bold text-[#4B6382] text-base">
+        <div className="font-bold text-[#4B6382] text-base">
           {format(currentMonth, dateFormat)}
         </div>
-        <div classname="flex gap-1 text-gray-500">
-          <button type="button" onclick="{nextMonth}" classname="p-1 hover:bg-gray-100 rounded-full transition-colors">
-            <chevronright size="{16}"/>
+        <div className="flex gap-1 text-gray-500">
+          <button type="button" onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+            <ChevronRight size={16}/>
           </button>
-          <button type="button" onclick="{nextYear}" classname="p-1 hover:bg-gray-100 rounded-full transition-colors">
-            <chevronsright size="{16}"/>
+          <button type="button" onClick={nextYear} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+            <ChevronsRight size={16}/>
           </button>
         </div>
       </div>
 
-      <div classname="grid grid-cols-7 gap-1 mb-1">
-        {days.map((day, i) => (
-          <div key="{day}" classname="text-center text-xs font-bold text-gray-900 pb-1">
+      <div className="grid grid-cols-7 gap-1 mb-1">
+        {days.map((day) => (
+          <div key={day} className="text-center text-xs font-bold text-gray-900 pb-1">
             {day}
           </div>
         ))}
       </div>
 
-      <div classname="grid grid-cols-7 gap-y-1 gap-x-1">
+      <div className="grid grid-cols-7 gap-y-1 gap-x-1">
         {blankDays.map((_, i) => {
           const prevMonthEnd = endOfMonth(subMonths(monthStart, 1));
           const dateNum = prevMonthEnd.getDate() - blankDays.length + 1 + i;
           return (
-            <div key="{`blank-${i}`}" classname="text-center p-1.5 text-xs text-[#A0AAB8] font-medium opacity-50">
+            <div key={`blank-${i}`} className="text-center p-1.5 text-xs text-[#A0AAB8] font-medium opacity-50">
               {dateNum}
             </div>
           );
@@ -97,7 +94,10 @@ export function TaskCalendar({
             : false;
           const isDayToday = isToday(day);
           return (
-            <button type="button" key="{day.toString()}" onclick="{()" ==""> onSelectDate(isSelected ? null : day)}
+            <button 
+              type="button" 
+              key={day.toString()} 
+              onClick={() => onSelectDate(isSelected ? null : day)}
               className={cn(
                 "w-8 h-8 mx-auto rounded-lg flex items-center justify-center text-xs font-medium transition-all group",
                 isSelected
