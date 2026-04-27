@@ -39,7 +39,7 @@ export function getPokeballSprite() {
   return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png";
 }
 
-export async function extractUrlTitle(url: string): Promise<string |="" null=""> {
+export async function extractUrlTitle(url: string): Promise<string | null> {
   try {
     // For YouTube URLs, use noembed API to bypass CORS and bot protection
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
@@ -93,4 +93,3 @@ export async function extractUrlTitle(url: string): Promise<string |="" null="">
     return null;
   }
 }
-
