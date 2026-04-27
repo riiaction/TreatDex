@@ -160,7 +160,10 @@ export function TaskList({
   });
 
   return (
+    // FIX: Changed to flex-col so we can have scrollable content + fixed bottom bar
     <div className="flex-1 relative flex flex-col overflow-hidden">
+
+      {/* Scrollable task list area — pb-32 gives space so last task isn't hidden behind the bar */}
       <div className="flex-1 overflow-y-auto pb-32">
         <div className="px-6 pt-4 pb-6">
           <div className="grid grid-cols-2 gap-4 mb-4">
@@ -307,44 +310,45 @@ export function TaskList({
             )}
           </div>
         </div>
+      </div>
 
-        <div className="absolute bottom-6 left-0 right-0 px-6 max-w-2xl mx-auto pointer-events-none z-10 flex flex-col items-center">
-          <AnimatePresence>
-            {toastMessage && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                exit={{ opacity: 0, y: -10 }} 
-                transition={{ duration: 0.3 }} 
-                className="mb-2 bg-yellow-400 text-yellow-900 px-5 py-2.5 rounded-full text-sm font-medium shadow-md whitespace-nowrap text-center"
-              >
-                {toastMessage}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <div className="w-full bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-100 pointer-events-auto relative pr-[4.5rem]">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                Caught Today
-              </span>
-              <span className="text-sm font-bold text-[#1daeb1]">
-                {completedToday} / {todayTasks.length}
-              </span>
-            </div>
-            <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-[#1daeb1] rounded-full transition-all duration-500 ease-out flex items-center justify-end pr-1" style={{ width: `${Math.max(progress, 5)}%` }}>
-                {progress > 10 && (
-                  <div className="w-1.5 h-1.5 bg-white/50 rounded-full"/>
-                )}
-              </div>
-            </div>
-
-            <button onClick={onAddNewClick} className="absolute top-1/2 -translate-y-1/2 right-4 w-9 h-9 bg-[#ed444a] hover:bg-red-600 active:bg-red-700 text-white rounded-full shadow-lg shadow-red-500/30 flex items-center justify-center transition-transform hover:scale-105 active:scale-95 z-20">
-              <Plus size={20} strokeWidth={2.5} />
-            </button>
+      {/* FIX: Caught Today bar is now OUTSIDE the scrollable area so it never scrolls away */}
+      <div className="px-6 pb-6 pt-2 bg-transparent pointer-events-none z-10 flex flex-col items-center">
+        <AnimatePresence>
+          {toastMessage && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -10 }} 
+              transition={{ duration: 0.3 }} 
+              className="mb-2 bg-yellow-400 text-yellow-900 px-5 py-2.5 rounded-full text-sm font-medium shadow-md whitespace-nowrap text-center"
+            >
+              {toastMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="w-full bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-100 pointer-events-auto relative pr-[4.5rem]">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
+              Caught Today
+            </span>
+            <span className="text-sm font-bold text-[#1daeb1]">
+              {completedToday} / {todayTasks.length}
+            </span>
           </div>
+          <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-full bg-[#1daeb1] rounded-full transition-all duration-500 ease-out flex items-center justify-end pr-1" style={{ width: `${Math.max(progress, 5)}%` }}>
+              {progress > 10 && (
+                <div className="w-1.5 h-1.5 bg-white/50 rounded-full"/>
+              )}
+            </div>
+          </div>
+          <button onClick={onAddNewClick} className="absolute top-1/2 -translate-y-1/2 right-4 w-9 h-9 bg-[#ed444a] hover:bg-red-600 active:bg-red-700 text-white rounded-full shadow-lg shadow-red-500/30 flex items-center justify-center transition-transform hover:scale-105 active:scale-95 z-20 pointer-events-auto">
+            <Plus size={20} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
+
     </div>
   );
 }
