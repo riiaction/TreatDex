@@ -99,14 +99,19 @@ export function MapTab({ tasks, rewards, onShowReward }: MapTabProps) {
   const locationRewards = rewards.filter(
     (r) => r.type === "cafe" && r.lat !== undefined && r.lng !== undefined
   );
-  
+
   const unlockedNonLocationRewards = rewards.filter(
     (r) => (r.type !== "cafe" || r.lat === undefined || r.lng === undefined) && isRewardUnlocked(r)
   );
 
+  // FIX 1: Also collect unlocked location rewards for the list view
+  const unlockedLocationRewards = locationRewards.filter((r) => isRewardUnlocked(r));
+
+  // FIX 1: Combine both into one list — location treats first, then others
+  const allUnlockedRewards = [...unlockedLocationRewards, ...unlockedNonLocationRewards];
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    // Fallback for different build environments
     googleMapsApiKey: (import.meta as any).env?.VITE_MAPS_VIEW || (process.env as any).VITE_MAPS_VIEW || "",
     libraries,
   });
@@ -158,11 +163,12 @@ export function MapTab({ tasks, rewards, onShowReward }: MapTabProps) {
         </div>
       </div>
 
-      {/* Non-Location Unlocked Rewards Section */}
+      {/* Unlocked Rewards Section */}
       <div className="flex-1 overflow-y-auto p-6 pb-24">
-        {unlockedNonLocationRewards.length > 0 ? (
+        {/* FIX 1: Use allUnlockedRewards instead of only unlockedNonLocationRewards */}
+        {allUnlockedRewards.length > 0 ? (
           <div className="space-y-4">
-            {unlockedNonLocationRewards.map((reward) => (
+            {allUnlockedRewards.map((reward) => (
               <div 
                 key={reward.id} 
                 className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:border-gray-200 transition-colors" 
@@ -188,6 +194,8 @@ export function MapTab({ tasks, rewards, onShowReward }: MapTabProps) {
                     </div>
                   )}
                 </div>
+
+                {/* External link button for regular link rewards */}
                 {reward.type === "link" && (
                   <button 
                     onClick={(e) => {
@@ -199,11 +207,25 @@ export function MapTab({ tasks, rewards, onShowReward }: MapTabProps) {
                     <ExternalLink size={18}/>
                   </button>
                 )}
+
+                {/* FIX 1: Google Maps link button for location (cafe) rewards */}
+                {reward.type === "cafe" && reward.lat !== undefined && reward.lng !== undefined && (
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(`https://www.google.com/maps/search/?api=1&query=${reward.lat},${reward.lng}`, "_blank");
+                    }}
+                    className="p-3 shrink-0 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-600 transition-colors border border-gray-200"
+                  >
+                    <ExternalLink size={18}/>
+                  </button>
+                )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center opacity-50 font-bold uppercase tracking-widest text-sm text-gray-400">
+          // FIX 2: Added text-center and px-6 so empty state text is properly centered on mobile
+          <div className="h-full flex flex-col items-center justify-center opacity-50 font-bold uppercase tracking-widest text-sm text-gray-400 text-center px-6">
             Complete a task to unlock your first treat
           </div>
         )}
