@@ -15,7 +15,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<"tasks" | "map">("tasks");
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isMasterKeyModalOpen, setIsMasterKeyModalOpen] = useState(false);
-  const [taskBeingEdited, setTaskBeingEdited] = useState<any>(null);
+  const [taskBeingEdited, setTaskBeingEdited] = useState<Task | null>(null);
 
   const [selectedRewardToReview, setSelectedRewardToReview] = useState<{
     task: Task;
@@ -44,13 +44,13 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-full bg-[#f9f9f9] flex justify-center text-gray-900 font-sans overflow-hidden">
-      {/* Mobile container - to enforce mobile-first view even on desktop */}
+    // Changed h-screen to h-dvh to fix the 10px mobile cutoff issue
+    <div className="h-dvh w-full bg-[#f9f9f9] flex justify-center text-gray-900 font-sans overflow-hidden">
+      {/* Mobile container */}
       <div className="w-full max-w-md bg-white h-full flex flex-col relative shadow-2xl">
         {/* Header */}
         <header className="px-6 pt-4 pb-1 flex justify-between items-center z-10 bg-white">
           <div className="flex items-center gap-2">
-            {/* Pokeball simple icon */}
             <div className="w-6 h-6 rounded-full bg-red-500 overflow-hidden relative border-2 border-black">
               <div className="h-1/2 bg-red-500"/>
               <div className="h-1/2 bg-white"/>
@@ -59,7 +59,8 @@ export default function App() {
             </div>
             <h1 className="font-extrabold text-xl tracking-tight">TreatDex</h1>
           </div>
-          <button onClick={() => setIsMasterKeyModalOpen(true)}
+          <button 
+            onClick={() => setIsMasterKeyModalOpen(true)}
             className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
           >
             <KeyRound size={20} />
@@ -67,27 +68,29 @@ export default function App() {
         </header>
 
         {/* Content Area */}
-        {activeTab === "tasks" ? (
-          <TaskList
-            tasks={store.tasks}
-            rewards={store.rewards}
-            onToggleTask={store.toggleTaskCompletion}
-            onToggleSubtask={store.toggleSubtaskCompletion}
-            onAddNewClick={() => setIsTaskModalOpen(true)}
-            onShowReward={handleShowReward}
-            onEditTask={handleEditTaskClick}
-            onDeleteTask={store.deleteTask}
-          />
-        ) : (
-          <MapTab
-            tasks={store.tasks}
-            rewards={store.rewards}
-            onShowReward={handleShowReward}
-          />
-        )}
+        <div className="flex-1 overflow-hidden">
+          {activeTab === "tasks" ? (
+            <TaskList
+              tasks={store.tasks}
+              rewards={store.rewards}
+              onToggleTask={store.toggleTaskCompletion}
+              onToggleSubtask={store.toggleSubtaskCompletion}
+              onAddNewClick={() => setIsTaskModalOpen(true)}
+              onShowReward={handleShowReward}
+              onEditTask={handleEditTaskClick}
+              onDeleteTask={store.deleteTask}
+            />
+          ) : (
+            <MapTab
+              tasks={store.tasks}
+              rewards={store.rewards}
+              onShowReward={handleShowReward}
+            />
+          )}
+        </div>
 
         {/* Bottom Navigation */}
-        <nav className="border-t border-gray-100 bg-white px-6 py-4 flex justify-around items-center z-30 pb-safe">
+        <nav className="border-t border-gray-100 bg-white px-6 py-4 flex justify-around items-center z-30 pb-[env(safe-area-inset-bottom)]">
           <button
             className={cn(
               "flex flex-col items-center gap-1 transition-colors",
