@@ -160,11 +160,11 @@ export function TaskList({
   });
 
   return (
-    // FIX: Changed to flex-col so we can have scrollable content + fixed bottom bar
-    <div className="flex-1 relative flex flex-col overflow-hidden">
+    // FIX: Replaced flex-1 with an absolute inset-0 to forcefully lock the height to the viewport.
+    <div className="absolute inset-0 flex flex-col w-full h-full overflow-hidden">
 
-      {/* Scrollable task list area — pb-32 gives space so last task isn't hidden behind the bar */}
-      <div className="flex-1 overflow-y-auto pb-32">
+      {/* FIX: Scrollable content area. pb-[140px] gives generous space so the last task isn't hidden behind the floating bar */}
+      <div className="flex-1 overflow-y-auto pb-[140px] relative z-0">
         <div className="px-6 pt-4 pb-6">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <button 
@@ -312,8 +312,9 @@ export function TaskList({
         </div>
       </div>
 
-      {/* FIX: Caught Today bar is now OUTSIDE the scrollable area so it never scrolls away */}
-      <div className="px-6 pb-6 pt-2 bg-transparent pointer-events-none z-10 flex flex-col items-center">
+      {/* FIX: Caught Today bar is completely decoupled from the scroll using absolute positioning. */}
+      {/* Note: Adjust bottom-24 (96px) to match the exact height of your app's bottom navigation menu if needed. */}
+      <div className="absolute bottom-24 left-0 w-full px-6 z-20 pointer-events-none flex flex-col items-center">
         <AnimatePresence>
           {toastMessage && (
             <motion.div 
@@ -321,7 +322,7 @@ export function TaskList({
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -10 }} 
               transition={{ duration: 0.3 }} 
-              className="mb-2 bg-yellow-400 text-yellow-900 px-5 py-2.5 rounded-full text-sm font-medium shadow-md whitespace-nowrap text-center"
+              className="mb-2 bg-yellow-400 text-yellow-900 px-5 py-2.5 rounded-full text-sm font-medium shadow-md whitespace-nowrap text-center pointer-events-auto"
             >
               {toastMessage}
             </motion.div>
