@@ -20,7 +20,8 @@ const defaultCenter = {
   lng: 114.1526,
 };
 
-const libraries: "places"[] = ["places"];
+// Declared outside to keep reference stable
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ["places"];
 
 const CombinedMarker: React.FC<{ 
   reward: Reward;
@@ -40,23 +41,21 @@ const CombinedMarker: React.FC<{
   React.useEffect(() => {
     const iconUrl = unlocked ? getPokemonSprite(reward.pokemonId) : getPokeballSprite();
     
-    // In order to not hit the security limits, create a canvas and combine background and image
     const canvas = document.createElement('canvas');
     canvas.width = 64;
     canvas.height = 64;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Draw background circle (size 64x64, radius 30)
+    // Draw background circle
     ctx.beginPath();
     ctx.arc(32, 32, 30, 0, 2 * Math.PI);
-    ctx.fillStyle = unlocked ? '#FFFBEB' : '#F9FAFB'; // Amber-50 vs Gray-50
+    ctx.fillStyle = unlocked ? '#FFFBEB' : '#F9FAFB';
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = unlocked ? '#FBBF24' : '#D1D5DB'; // Amber-400 vs Gray-300
+    ctx.strokeStyle = unlocked ? '#FBBF24' : '#D1D5DB';
     ctx.stroke();
 
-    // Draw image (size 50x50). Pokeball and Pokemon all are size 50
     const img = new Image();
     img.crossOrigin = 'Anonymous';
     img.onload = () => {
@@ -64,7 +63,6 @@ const CombinedMarker: React.FC<{
       setIconDataUrl(canvas.toDataURL());
     };
     img.onerror = () => {
-      // Fallback
       setIconDataUrl(canvas.toDataURL());
     };
     img.src = iconUrl;
@@ -108,7 +106,8 @@ export function MapTab({ tasks, rewards, onShowReward }: MapTabProps) {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: (import.meta as any).env.VITE_MAPS_VIEW || process.env.MapsView || "",
+    // Fallback for different build environments
+    googleMapsApiKey: (import.meta as any).env?.VITE_MAPS_VIEW || (process.env as any).VITE_MAPS_VIEW || "",
     libraries,
   });
 
@@ -128,10 +127,6 @@ export function MapTab({ tasks, rewards, onShowReward }: MapTabProps) {
                 <>
                   {locationRewards.map((reward) => {
                     const unlocked = isRewardUnlocked(reward);
-                    const iconUrl = unlocked
-                      ? getPokemonSprite(reward.pokemonId)
-                      : getPokeballSprite();
-
                     const isHoverable = unlocked && !!reward.assignedTaskId;
 
                     return (
