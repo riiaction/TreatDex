@@ -160,11 +160,11 @@ export function TaskList({
   });
 
   return (
-    // FIX: Replaced flex-1 with an absolute inset-0 to forcefully lock the height to the viewport.
-    <div className="absolute inset-0 flex flex-col w-full h-full overflow-hidden">
+    // Reverted the absolute override. Now naturally sits inside the App layout.
+    <div className="relative flex flex-col w-full h-full overflow-hidden">
 
-      {/* FIX: Scrollable content area. pb-[140px] gives generous space so the last task isn't hidden behind the floating bar */}
-      <div className="flex-1 overflow-y-auto pb-[140px] relative z-0">
+      {/* pb-32 leaves just enough scroll room for the progress bar without looking broken */}
+      <div className="flex-1 overflow-y-auto pb-32 relative z-0">
         <div className="px-6 pt-4 pb-6">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <button 
@@ -312,9 +312,8 @@ export function TaskList({
         </div>
       </div>
 
-      {/* FIX: Caught Today bar is completely decoupled from the scroll using absolute positioning. */}
-      {/* Note: Adjust bottom-24 (96px) to match the exact height of your app's bottom navigation menu if needed. */}
-      <div className="absolute bottom-24 left-0 w-full px-6 z-20 pointer-events-none flex flex-col items-center">
+      {/* Changed bottom-24 to bottom-6 since we fixed the layout boundaries */}
+      <div className="absolute bottom-6 left-0 w-full px-6 z-20 pointer-events-none flex flex-col items-center">
         <AnimatePresence>
           {toastMessage && (
             <motion.div 
