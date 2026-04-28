@@ -44,12 +44,13 @@ export default function App() {
   };
 
   return (
-    // Changed h-screen to h-dvh to fix the 10px mobile cutoff issue
-    <div className="h-dvh w-full bg-[#f9f9f9] flex justify-center text-gray-900 font-sans overflow-hidden">
+    // Fixed height to ensure compatibility across all mobile browsers
+    <div className="h-[100dvh] w-full bg-[#f9f9f9] flex justify-center text-gray-900 font-sans overflow-hidden">
       {/* Mobile container */}
       <div className="w-full max-w-md bg-white h-full flex flex-col relative shadow-2xl">
-        {/* Header */}
-        <header className="px-6 pt-4 pb-1 flex justify-between items-center z-10 bg-white">
+        
+        {/* Header - Added max() to ensure padding exists even if safe-area is 0 */}
+        <header className="px-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-2 flex justify-between items-center z-10 bg-white flex-shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-red-500 overflow-hidden relative border-2 border-black">
               <div className="h-1/2 bg-red-500"/>
@@ -67,8 +68,8 @@ export default function App() {
           </button>
         </header>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-hidden">
+        {/* Content Area - Added 'relative' to keep the floating bar correctly contained */}
+        <div className="flex-1 relative overflow-hidden">
           {activeTab === "tasks" ? (
             <TaskList
               tasks={store.tasks}
@@ -89,8 +90,8 @@ export default function App() {
           )}
         </div>
 
-        {/* Bottom Navigation */}
-        <nav className="border-t border-gray-100 bg-white px-6 py-4 flex justify-around items-center z-30 pb-[env(safe-area-inset-bottom)]">
+        {/* Bottom Navigation - Fixed padding logic so text is never cut off */}
+        <nav className="border-t border-gray-100 bg-white px-6 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex justify-around items-center z-30 flex-shrink-0">
           <button
             className={cn(
               "flex flex-col items-center gap-1 transition-colors",
